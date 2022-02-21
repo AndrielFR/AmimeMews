@@ -3,10 +3,13 @@
 
 from typing import List, Tuple
 
-from mews import database
+from . import conn
 
-
-conn = database.get_conn()
+async def get_all_words() -> List[Tuple]:
+    cursor = await conn.execute("SELECT * FROM words")
+    rows = await cursor.fetchall()
+    await cursor.close()
+    return rows
 
 async def get_word(id: int) -> Tuple:
     cursor = await conn.execute("SELECT * FROM words WHERE id = ?", (id,))
@@ -37,4 +40,4 @@ async def register_word(user_id: int, word: str):
     await conn.commit()
 
 
-__all__ = ["get_word", "get_words", "get_words_by_user_id", "delete_word", "register_word"]
+__all__ = ["get_all_words", "get_word", "get_words", "get_words_by_user_id", "delete_word", "register_word"]

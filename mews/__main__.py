@@ -17,7 +17,7 @@ logging.basicConfig(
 )
 logging.getLogger("pyrogram.syncer").setLevel(logging.WARNING)
 logging.getLogger("pyrogram.client").setLevel(logging.WARNING)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 async def main():
     await database.connect()
@@ -33,6 +33,9 @@ async def main():
     )
     await client.start()
     client.me = await client.get_me()
+    
+    from mews import monitor
+    await monitor.start(client)
     
     await idle()
 
@@ -50,4 +53,8 @@ if __name__ == "__main__":
         if database.is_connected():
             event_loop.run_until_complete(database.close())
         
-        event_loop.close()
+        from mews import monitor
+        event_loop.run_until_complete(monitor.stop())
+        
+        from mews.utils import close_http
+        event_loop.run_until_complete(close_http())

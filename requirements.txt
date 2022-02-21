@@ -1,2 +1,6 @@
 pyrogram>=1.4.0,<1.5.0
 aiosqlite<=0.18.0
+httpx[http2]>=0.14.0
+feedparser>=6.0.0
+telegraph>=2.0.0
+beautifulsoup4>=4.8.0

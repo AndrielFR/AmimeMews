@@ -6,7 +6,7 @@ import logging
 import aiosqlite
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 conn: aiosqlite.Connection = None
 path: str = "mews/database/sqlite.db3"
 
@@ -21,6 +21,20 @@ async def connect():
             id INTEGER PRIMARY KEY,
             user_id INTEGER NOT NULL,
             word VARCHAR(512) NOT NULL
+    )
+    """)
+    
+    await conn.execute("""
+    CREATE TABLE IF NOT EXISTS posts (
+            id INTEGER PRIMARY KEY,
+            source VARCHAR(64) NOT NULL,
+            title VARCHAR(512) NOT NULL,
+            author VARCHAR(256) NOT NULL,
+            published_date INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            post_link VARCHAR(512) NOT NULL,
+            comments_link VARCHAR(512) NOT NULL,
+            telegraph_link VARCHAR(256) NOT NULL
     )
     """)
     
