@@ -101,7 +101,7 @@ async def worker(source: object, client: Client):
                     
                     break
             
-            if index == len(new_posts):
+            if (index + 1) == len(new_posts):
                 source.clear_new_posts()
         
         await asyncio.sleep(300)
