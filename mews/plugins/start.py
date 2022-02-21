@@ -23,13 +23,13 @@ Você sabia que você pode <b>filtrar</b> notícias? O processo para isso é mui
                                     postagem relacionada.
                                         
 <code>•</code> /del &lt;nome&gt;     <code>—</code> remove uma palavra/nome da lista de filtros.
-                                    Exemplo: <code>/del Jujutsu Kaisen</code>, com
-                                    esse comando, você remove <code>Jujutsu Kaisen</code>
-                                    da lista de filtros e não receberá mais no privado
-                                    quaisquer postagem relacionada.
+                                    Exemplo: <code>/del Jujutsu Kaisen</code>, com esse
+                                    comando, você remove <code>Jujutsu Kaisen</code> da
+                                    lista de filtros e não receberá mais quaisquer
+                                    postagem relacionada.
                                         
 <code>•</code> /words               <code>—</code> veja sua lista de filtros.
 
-No momento, é apenas isso, mas <s>eu estou ansioso</s> pelas atualizações que <s>receberei</s> em breve. 😵
+<b>No momento</b> é apenas isso, mas <s>eu estou ansioso</s> pelas atualizações que <u>receberei</u> <s>em breve</s>. 😵
     """
     await message.reply_text(text)
