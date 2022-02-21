@@ -6,11 +6,8 @@ import random
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from mews import database
 from mews.utils.database import get_words_by_user_id, delete_word, register_word
 
-
-conn = database.get_conn()
 
 @Client.on_message(filters.command("add"))
 async def _add(client: Client, message: Message):
