@@ -1,0 +1,7 @@
+# Personal files
+config.ini
+*.session*
+*.db3*
+
+# Byte pre-compiled
+__pycache__/
