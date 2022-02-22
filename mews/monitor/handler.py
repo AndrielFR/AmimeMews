@@ -12,6 +12,7 @@ from telegraph.aio import Telegraph
 from telegraph.utils import ALLOWED_TAGS
 from telegraph.exceptions import NotAllowedTag
 from httpx import ConnectTimeout
+from typing import List
 
 from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21
 from mews.utils.database import get_all_words, register_post
@@ -19,39 +20,54 @@ from mews.utils.database import get_all_words, register_post
 
 logger = logging.getLogger(__name__)
 sources = [AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21]
-futures = []
+future = None
 event_loop = asyncio.get_event_loop()
 telegraph = Telegraph()
 
 async def start(client: Client):
+    global future
+
     logger.info("Starting monitor...")
     logger.info("Sources availabes: %s", [source.__name__ for source in sources])
     
-    for source in sources:
-        future = asyncio.ensure_future(worker(source(), client))
-        futures.append(future)
-        await asyncio.sleep(10)
+    future = asyncio.ensure_future(worker([source() for source in sources], client))
     
     logger.info("Monitor started")
 
 async def stop():
+    global future
+
     logger.info("Stopping monitor...")
     
-    for future in futures:
-        future.cancel()
+    future.cancel()
     
-    futures.clear()
     logger.info("Monitor stopped")
 
-async def worker(source: object, client: Client):
-    event_loop.create_task(source.work())
-    logger.debug("Source %s is working", source.__class__.__name__)
+async def worker(sources: List[object], client: Client):
+    for source in sources:
+        event_loop.create_task(source.work())
+        logger.debug("Source %s is working", source.__class__.__name__)
+        await asyncio.sleep(2.5)
     
-    await asyncio.sleep(2.5)
+    def get_new_posts():
+        nonlocal sources
+
+        new_posts = []
+        
+        for source in sources:
+            new_posts.extend(source.get_new_posts())
+        
+        return new_posts
+    
+    def clear_new_posts():
+        nonlocal sources
+
+        for source in sources:
+            source.clear_new_posts()
     
     while True:
-        new_posts = source.get_new_posts()
-        logger.debug("%s has %s new post(s)", source.__class__.__name__, len(new_posts))
+        new_posts = get_new_posts()
+        logger.debug("%s new post(s) found", len(new_posts))
         
         for index, post in enumerate(new_posts):
             title = post["title"]
@@ -91,16 +107,18 @@ async def worker(source: object, client: Client):
                     
                     for chat_id in chats:
                         try:
-                            await client.send_message(chat_id, f"<a href='{url}'>{title} [{source.__class__.__name__}]</a>")
+                            await client.send_message(chat_id, f"<a href='{url}'>{title} [{post['source']}]</a>")
                         except FloodWait as e:
                             await asyncio.sleep(e.x)
                         else: pass
                     
-                    await register_post(source.__class__.__name__.lower(), title, author, post["published_date"], content, post["post_link"], post["comments_link"], url)
+                    await register_post(post["source"].lower(), title, author, post["published_date"], content, post["post_link"], post["comments_link"], url)
                     
                     break
             
             if (index + 1) == len(new_posts):
-                source.clear_new_posts()
+                clear_new_posts()
+            
+            await asyncio.sleep(2.0)
         
         await asyncio.sleep(300)

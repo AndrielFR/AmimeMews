@@ -31,6 +31,7 @@ class BaseRSS(object):
             
             if not (await exists_post(self.__class__.__name__.lower(), title, published_date, content, post_link, comments_link)):
                 self.new_posts.append(dict(
+                    source=self.__class__.__name__,
                     title=title,
                     author=author,
                     published_date=published_date,
