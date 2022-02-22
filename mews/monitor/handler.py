@@ -28,9 +28,9 @@ async def start(client: Client):
     logger.info("Sources availabes: %s", [source.__name__ for source in sources])
     
     for source in sources:
-        future = asyncio.ensure_future(worker(source, client))
+        future = asyncio.ensure_future(worker(source(), client))
         futures.append(future)
-        await asyncio.sleep(4)
+        await asyncio.sleep(10)
     
     logger.info("Monitor started")
 
@@ -44,12 +44,10 @@ async def stop():
     logger.info("Monitor stopped")
 
 async def worker(source: object, client: Client):
-    source = source()
-    
     event_loop.create_task(source.work())
     logger.debug("Source %s is working", source.__class__.__name__)
     
-    await asyncio.sleep(5)
+    await asyncio.sleep(2.5)
     
     while True:
         new_posts = source.get_new_posts()

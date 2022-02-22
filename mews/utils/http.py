@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 http = httpx.AsyncClient(
     http2=True,
+    timeout=httpx.Timeout(15.0, connect=60.0),
     transport=httpx.AsyncHTTPTransport(retries=3),
     follow_redirects=True,
 )
