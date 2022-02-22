@@ -13,12 +13,12 @@ from telegraph.utils import ALLOWED_TAGS
 from telegraph.exceptions import NotAllowedTag
 from httpx import ConnectTimeout
 
-from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga
+from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21
 from mews.utils.database import get_all_words, register_post
 
 
 logger = logging.getLogger(__name__)
-sources = [AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga]
+sources = [AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21]
 futures = []
 event_loop = asyncio.get_event_loop()
 telegraph = Telegraph()
