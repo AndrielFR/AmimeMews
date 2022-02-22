@@ -92,7 +92,7 @@ async def worker(source: object, client: Client):
                     
                     for chat_id in chats:
                         try:
-                            await client.send_message(chat_id, f"<a href='{url}'>{title}</a>")
+                            await client.send_message(chat_id, f"<a href='{url}'>{title} [{source.__class__.__name__}]</a>")
                         except FloodWait as e:
                             await asyncio.sleep(e.x)
                         else: pass
