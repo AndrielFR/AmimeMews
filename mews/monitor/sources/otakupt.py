@@ -13,10 +13,10 @@ from mews.utils.database import exists_post
 from mews.monitor.sources import BaseRSS
 
 
-class AnimeNew(BaseRSS):
+class OtakuPTAnime(BaseRSS):
     def __init__(self):
-        self.uri = "https://www.animenew.com.br/"
-        self.rss_uri = "https://animenew.com.br/feed/"
+        self.uri = "https://www.otakupt.com/category/anime/"
+        self.rss_uri = "https://www.otakupt.com/category/anime/feed/"
         self.new_posts: List[Dict] = []
     
     async def work(self):
@@ -32,9 +32,9 @@ class AnimeNew(BaseRSS):
             post_response = await http.get(post_link)
             post_soup = BeautifulSoup(post_response.content, "html.parser")
             
-            post_content = post_soup.find("div", **{"class": "elementor-widget-theme-post-content"})
-            contents = post_content.find_next("div").contents
-            content = "".join(str(line) for line in contents[1:-2])
+            post_content = post_soup.find("div", **{"class": "td-post-content"})
+            contents = post_content.contents
+            content = "".join(str(line) for line in contents[4:-7])
             
             if not (await exists_post(self.__class__.__name__.lower(), title, published_date, content, post_link, comments_link)):
                 self.new_posts.append(dict(
@@ -48,3 +48,9 @@ class AnimeNew(BaseRSS):
         
         await asyncio.sleep(600)
         await self.work()
+
+class OtakuPTManga(OtakuPTAnime):
+    def __init__(self):
+        self.uri = "https://www.otakupt.com/category/manga/"
+        self.rss_uri = "https://www.otakupt.com/category/manga/feed/"
+        self.new_posts: List[Dict] = []
