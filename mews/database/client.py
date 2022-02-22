@@ -32,9 +32,9 @@ async def connect():
             author VARCHAR(256) NOT NULL,
             published_date INTEGER NOT NULL,
             content TEXT NOT NULL,
-            post_link VARCHAR(512) NOT NULL,
-            comments_link VARCHAR(512) NOT NULL,
-            telegraph_link VARCHAR(256) NOT NULL
+            post_link TEXT NOT NULL,
+            comments_link TEXT NOT NULL,
+            telegraph_link TEXT NOT NULL
     )
     """)
     
