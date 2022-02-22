@@ -9,7 +9,7 @@ from pyrogram.types import Message
 from mews.utils.database import get_words_by_user_id, delete_word, register_word
 
 
-@Client.on_message(filters.command("add"))
+@Client.on_message(filters.command("add") & filters.private)
 async def _add(client: Client, message: Message):
     user = message.from_user
     
@@ -25,7 +25,7 @@ async def _add(client: Client, message: Message):
     await register_word(user.id, word)
     await message.reply_text("Palavra/nome adicionada com succeso à sua lista de filtros, verique a lista com /words")
 
-@Client.on_message(filters.command("del"))
+@Client.on_message(filters.command("del") & filters.private)
 async def _del(client: Client, message: Message):
     user = message.from_user
     
@@ -41,7 +41,7 @@ async def _del(client: Client, message: Message):
     await delete_word(user.id, word)
     await message.reply_text("Palavra/nome removida com succeso da sua lista de filtros, verique a lista com /words")
 
-@Client.on_message(filters.command("words"))
+@Client.on_message(filters.command("words") & filters.private)
 async def _words(client: Client, message: Message):
     user = message.from_user
     
