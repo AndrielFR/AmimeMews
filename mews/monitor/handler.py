@@ -79,7 +79,7 @@ async def worker(source: object, client: Client):
                 else:
                     url = response["url"]
                     
-                    chats = [-1001643721892]
+                    chats = [client.news_channel]
                     
                     for row in (await get_all_words()):
                         user_id = row[1]

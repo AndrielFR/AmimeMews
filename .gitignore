@@ -1,5 +1,5 @@
 # Personal files
-config.ini
+config.toml
 *.session*
 *.db3*
 

@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022 Andriel Ferreira <https://github.com/AndrielFR>
+
+[pyrogram]
+api_id = 0
+api_hash = ""
+bot_token = ""
+
+[mews]
+news_channel = -1
+post_revision = -1
