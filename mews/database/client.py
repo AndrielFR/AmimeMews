@@ -34,7 +34,8 @@ async def connect():
             content TEXT NOT NULL,
             post_link TEXT NOT NULL,
             comments_link TEXT NOT NULL,
-            telegraph_link TEXT NOT NULL
+            telegraph_link TEXT NOT NULL,
+            is_archived INTEGER NOT NULL DEFAULT 0
     )
     """)
     

@@ -11,11 +11,12 @@ from pyrogram.errors import FloodWait
 from telegraph.aio import Telegraph
 from telegraph.utils import ALLOWED_TAGS
 from telegraph.exceptions import NotAllowedTag
+from pyromod.helpers import ikb
 from httpx import ConnectTimeout
 from typing import List
 
 from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21
-from mews.utils.database import get_all_words, register_post
+from mews.utils.database import get_all_words, get_similar_posts, register_post
 
 
 logger = logging.getLogger(__name__)
@@ -95,22 +96,49 @@ async def worker(sources: List[object], client: Client):
                 else:
                     url = response["url"]
                     
-                    chats = [client.news_channel]
-                    
-                    for row in (await get_all_words()):
-                        user_id = row[1]
-                        word = row[2]
+                    similar_posts = await get_similar_posts(title)
+                    if similar_posts:
+                        from mews.plugins.archive import posts
+                        index = len(posts)
+                        post["telegraph_url"] = url
+
+                        if post in posts:
+                            break
+
+                        posts.append(post)
                         
-                        if word in title.lower() or word in content.lower():
-                            if user_id not in chats:
-                                chats.append(user_id)
-                    
-                    for chat_id in chats:
-                        try:
-                            await client.send_message(chat_id, f"<a href='{url}'>{title} [{post['source']}]</a>")
-                        except FloodWait as e:
-                            await asyncio.sleep(e.x)
-                        else: pass
+                        text = "Err! Temos um problema, fui fazer a postagem de uma nova notícia e percebi que já postei algo parecido, não sei dizer, você pode olhar pra mim?\n"
+                        text += f"\n<b>Título</b>: {title}"
+                        text += f"\n<b>Autor</b>: {author}"
+                        text += f"\n<b>URL</b>: {url}"
+                        text += "\n\n<b>Postagens similares que eu encontrei</b>:"
+                        
+                        for similar_post in similar_posts:
+                            text += f"\n<b>Título</b>: {similar_post[2]}"
+                            text += f"\n<b>Autor</b>: {similar_post[3]}"
+                            text += f"\n<b>URL</b>: {similar_post[8]}"
+                            text += "\n"
+
+                        await client.send_message(client.post_revision, text, reply_markup=ikb([[("✅ Poste", f"archive_post no {index}"), ("🗄️ Arquive", f"archive_post yes {index}")]]), disable_web_page_preview=True)
+                        
+                        break
+                    else:
+                        chats = [client.news_channel]
+                        
+                        for row in (await get_all_words()):
+                            user_id = row[1]
+                            word = row[2]
+                            
+                            if word in title.lower() or word in content.lower():
+                                if user_id not in chats:
+                                    chats.append(user_id)
+                        
+                        for chat_id in chats:
+                            try:
+                                await client.send_message(chat_id, f"<a href='{url}'>{title} [{post['source']}]</a>")
+                            except FloodWait as e:
+                                await asyncio.sleep(e.x)
+                            else: pass
                     
                     await register_post(post["source"].lower(), title, author, post["published_date"], content, post["post_link"], post["comments_link"], url)
                     
