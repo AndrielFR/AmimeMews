@@ -47,7 +47,7 @@ async def stop():
 async def worker(sources: List[object], client: Client):
     for source in sources:
         event_loop.create_task(source.work())
-        logger.debug("Source %s is working", source.__class__.__name__)
+        logger.info("Source %s is working", source.__class__.__name__)
         await asyncio.sleep(4)
     
     def get_new_posts():
@@ -68,7 +68,7 @@ async def worker(sources: List[object], client: Client):
     
     while True:
         new_posts = get_new_posts()
-        logger.debug("%s new post(s) found", len(new_posts))
+        logger.info("%s new post(s) found", len(new_posts))
         
         for index, post in enumerate(new_posts):
             title = post["title"]
