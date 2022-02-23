@@ -6,8 +6,8 @@ from typing import Optional, List, Tuple
 from . import conn
 
 
-async def exists_post(source: str, title: str, published_date: int, content: str, post_link: str, comments_link: str) -> Tuple:
-    cursor = await conn.execute("SELECT * FROM posts WHERE source = ? AND (title = ? OR published_date = ? OR content = ? OR post_link = ? OR comments_link = ?)", (source, title, published_date, content, post_link, comments_link))
+async def exists_post(source: str, title: str, content: str, post_link: str) -> Tuple:
+    cursor = await conn.execute("SELECT * FROM posts WHERE source = ? AND (title = ? OR content = ? OR post_link = ?)", (source, title, content, post_link))
     rows = await cursor.fetchall()
     await cursor.close()
     return bool(rows)

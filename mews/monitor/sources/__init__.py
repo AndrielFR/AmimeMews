@@ -8,3 +8,5 @@ from .intoxianime import IntoxiAnime
 from .tecmundo import TecMundo
 from .otakupt import OtakuPTAnime, OtakuPTManga
 from .anime21 import Anime21
+from .blogbbm import BlogBBM
+from .crunchyroll import Crunchyroll

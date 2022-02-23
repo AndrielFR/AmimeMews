@@ -10,17 +10,17 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait
 from telegraph.aio import Telegraph
 from telegraph.utils import ALLOWED_TAGS
-from telegraph.exceptions import NotAllowedTag
+from telegraph.exceptions import NotAllowedTag, TelegraphException
 from pyromod.helpers import ikb
 from httpx import ConnectTimeout
 from typing import List
 
-from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21
+from mews.monitor.sources import AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21, BlogBBM, Crunchyroll
 from mews.utils.database import get_all_words, get_similar_posts, register_post
 
 
 logger = logging.getLogger(__name__)
-sources = [AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21]
+sources = [AnimeUnited, AnimeNew, IntoxiAnime, TecMundo, OtakuPTAnime, OtakuPTManga, Anime21, BlogBBM, Crunchyroll]
 future = None
 event_loop = asyncio.get_event_loop()
 telegraph = Telegraph()
@@ -48,7 +48,7 @@ async def worker(sources: List[object], client: Client):
     for source in sources:
         event_loop.create_task(source.work())
         logger.debug("Source %s is working", source.__class__.__name__)
-        await asyncio.sleep(2.5)
+        await asyncio.sleep(4)
     
     def get_new_posts():
         nonlocal sources
@@ -90,9 +90,8 @@ async def worker(sources: List[object], client: Client):
                         html_content=content,
                         author_name=author,
                     )
-                except ConnectTimeout:
-                    continue
-                except NotAllowedTag: break
+                except ConnectTimeout: continue
+                except (NotAllowedTag, TelegraphException): break
                 else:
                     url = response["url"]
                     

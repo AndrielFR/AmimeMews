@@ -25,7 +25,7 @@ class AnimeNew(BaseRSS):
         for entrie in p.entries[:10]:
             title = entrie.title
             author = entrie.author
-            published_date = int(time.mktime(entrie.published_parsed))
+            published_date = int(round(time.mktime(entrie.published_parsed)))
             post_link = entrie.link
             comments_link = entrie.comments
             
@@ -36,7 +36,7 @@ class AnimeNew(BaseRSS):
             contents = post_content.find_next("div").contents
             content = "".join(str(line) for line in contents[1:-2])
             
-            if not (await exists_post(self.__class__.__name__.lower(), title, published_date, content, post_link, comments_link)):
+            if not (await exists_post(self.__class__.__name__.lower(), title, content, post_link)):
                 self.new_posts.append(dict(
                     source=self.__class__.__name__,
                     title=title,
