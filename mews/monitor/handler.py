@@ -95,31 +95,39 @@ async def worker(sources: List[object], client: Client):
                 else:
                     url = response["url"]
                     
-                    similar_posts = await get_similar_posts(title)
-                    if similar_posts:
-                        from mews.plugins.archive import posts
-                        index = len(posts)
-                        post["telegraph_url"] = url
-
-                        if post in posts:
+                    similar_posts = []
+                    title_splited = re.findall("\w+", title)
+                    index = 0
+                    while index < len(title_splited) - 2:
+                        similar_posts = await get_similar_posts(" ".join(title_splited[index:index+3]))
+                        if similar_posts:
+                            from mews.plugins.archive import posts
+                            index = len(posts)
+                            post["telegraph_url"] = url
+    
+                            if post in posts:
+                                break
+    
+                            posts.append(post)
+                            
+                            text = "Err! Temos um problema, fui fazer a postagem de uma nova notícia e percebi que já postei algo parecido, não sei dizer, você pode olhar pra mim?\n"
+                            text += f"\n<b>Título</b>: {title}"
+                            text += f"\n<b>Autor</b>: {author}"
+                            text += f"\n<b>URL</b>: {url}"
+                            text += "\n\n<b>Postagens similares que eu encontrei</b>:"
+                            
+                            for similar_post in similar_posts:
+                                text += f"\n<b>Título</b>: {similar_post[2]}"
+                                text += f"\n<b>Autor</b>: {similar_post[3]}"
+                                text += f"\n<b>URL</b>: {similar_post[8]}"
+                                text += "\n"
+    
+                            await client.send_message(client.post_revision, text, reply_markup=ikb([[("✅ Poste", f"archive_post no {index}"), ("🗄️ Arquive", f"archive_post yes {index}")]]), disable_web_page_preview=True)
+                            
                             break
-
-                        posts.append(post)
-                        
-                        text = "Err! Temos um problema, fui fazer a postagem de uma nova notícia e percebi que já postei algo parecido, não sei dizer, você pode olhar pra mim?\n"
-                        text += f"\n<b>Título</b>: {title}"
-                        text += f"\n<b>Autor</b>: {author}"
-                        text += f"\n<b>URL</b>: {url}"
-                        text += "\n\n<b>Postagens similares que eu encontrei</b>:"
-                        
-                        for similar_post in similar_posts:
-                            text += f"\n<b>Título</b>: {similar_post[2]}"
-                            text += f"\n<b>Autor</b>: {similar_post[3]}"
-                            text += f"\n<b>URL</b>: {similar_post[8]}"
-                            text += "\n"
-
-                        await client.send_message(client.post_revision, text, reply_markup=ikb([[("✅ Poste", f"archive_post no {index}"), ("🗄️ Arquive", f"archive_post yes {index}")]]), disable_web_page_preview=True)
-                        
+                        index += 1
+                    
+                    if similar_posts:
                         break
                     else:
                         chats = [client.news_channel]

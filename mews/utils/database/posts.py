@@ -13,7 +13,7 @@ async def exists_post(source: str, title: str, content: str, post_link: str) -> 
     return bool(rows)
 
 async def get_similar_posts(title: str) -> Optional[List[Tuple]]:
-    cursor = await conn.execute(f"SELECT * FROM posts WHERE LOWER(title) LIKE ?", (title.replace(" ", "%").lower(),))
+    cursor = await conn.execute("SELECT * FROM posts WHERE LOWER(title) LIKE ? AND is_archived = 0", ("%" + title.replace(" ", "%").lower() + "%",))
     rows = await cursor.fetchall()
     await cursor.close()
     return rows
