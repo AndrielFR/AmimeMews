@@ -5,6 +5,8 @@ import asyncio
 import re
 import time
 
+import cloudscraper
+
 from bs4 import BeautifulSoup
 
 from mews.utils import http
@@ -18,8 +20,10 @@ class Crunchyroll(BaseRSS):
         self.new_posts: List[Dict] = []
     
     async def work(self):
-        response = await http.get(self.uri)
-        soup = BeautifulSoup(response.content, "html.parser")
+        cscraper = cloudscraper.create_scraper(browser="firefox")
+        
+        response = cscraper.get(self.uri)
+        soup = BeautifulSoup(response.text, "html.parser")
         entries = soup.find_all("div", **{"class": "news-share-bar"})
         for entrie in entries[:10]:
             script = entrie.find_next("script")
@@ -29,7 +33,7 @@ class Crunchyroll(BaseRSS):
             
             author = soup.find("span", **{"class": "byline"}).a.string.strip()
             
-            published_date = soup.find("div", **{"class": "post-date"}).contents[0].strip().split()
+            post_date = soup.find("div", **{"class": "post-date"}).contents[0].strip().split()
             months = {
                 "Janeiro": 1,
                 "Fevereiro": 2,
@@ -44,17 +48,18 @@ class Crunchyroll(BaseRSS):
                 "Novembro": 11,
                 "Dezembro": 12
             }
-            month = months[published_date[0]]
-            day = int(published_date[1].replace(",", ""))
-            year = int(published_date[2])
-            hours, minutes = published_date[3].replace("am", "").replace("pm", "").split(":")
+            month = months[post_date[0]]
+            day = int(post_date[1].replace(",", ""))
+            year = int(post_date[2])
+            hours, minutes = post_date[3].replace("am", "").replace("pm", "").split(":")
             hours, minutes = int(hours), int(minutes)
             published_date = int(round(time.mktime(time.struct_time((year, month, day, hours, minutes, 0, 0, 0, 0)))))
             
-            post_response = await http.get(post_link)
-            post_soup = BeautifulSoup(post_response.content, "html.parser")
+            post_response = cscraper.get(post_link)
+            post_soup = BeautifulSoup(post_response.text, "html.parser")
             
-            contents = post_soup.find("div", **{"class": "contents"}).contents
+            body = post_soup.find("div", **{"class": "body"})
+            contents = body.find_next("div", **{"class": "contents"}).contents
             content = "".join(str(line) for line in contents[:-4])
             
             if not (await exists_post(self.__class__.__name__.lower(), title, content, post_link)):
