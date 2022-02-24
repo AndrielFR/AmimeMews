@@ -5,7 +5,6 @@ import logging
 
 import httpx
 
-
 logger = logging.getLogger(__name__)
 
 http = httpx.AsyncClient(
@@ -14,6 +13,7 @@ http = httpx.AsyncClient(
     transport=httpx.AsyncHTTPTransport(retries=3),
     follow_redirects=True,
 )
+
 
 async def close_http():
     await http.aclose()

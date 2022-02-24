@@ -8,7 +8,7 @@ from pyrogram.types import Message
 @Client.on_message(filters.command("start"))
 async def start(client: Client, message: Message):
     user = message.from_user
-    
+
     text = f"""
 Olá {user.mention}!
 
