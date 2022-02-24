@@ -28,7 +28,7 @@ async def archive_post(client: Client, callback: CallbackQuery):
             user_id = row[1]
             word = row[2]
             
-            if word in title.lower() or word in content.lower():
+            if word in post["title"].lower() or word in post["content"].lower():
                 if user_id not in chats:
                     chats.append(user_id)
         
