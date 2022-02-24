@@ -33,7 +33,7 @@ class BlogBBM(BaseRSS):
             
             post_content = post_soup.find("article", **{"class": "vn-article-content"})
             contents = post_content.find_next("div", **{"class": "entry-content"}).contents
-            content = "".join(str(line) for line in contents[:-21])
+            content = "".join(str(line) for line in contents[4:-21])
             
             if not (await exists_post(self.__class__.__name__.lower(), title, content, post_link)):
                 self.new_posts.append(dict(

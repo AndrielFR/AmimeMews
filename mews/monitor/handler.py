@@ -6,6 +6,7 @@ import logging
 import re
 import time
 
+from bs4 import BeautifulSoup
 from pyrogram import Client
 from pyrogram.errors import FloodWait
 from telegraph.aio import Telegraph
@@ -79,6 +80,17 @@ async def worker(sources: List[object], client: Client):
                 tag = re.sub("[/<>]", "", full_tag).split()[0]
                 if tag not in ALLOWED_TAGS:
                     content = re.sub(full_tag, "", content)
+            
+            soup = BeautifulSoup(content, "html.parser")
+            images = []
+            for img in soup.find_all("img"):
+                if img.has_attr("src"):
+                    if img["src"] in images:
+                        img.decompose()
+                    else:
+                        images.append(img["src"])
+            
+            content = str(soup)
             
             while True:
                 response = None
