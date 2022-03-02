@@ -24,12 +24,14 @@ async def archive_post(client: Client, callback: CallbackQuery):
     post = posts[index]
 
     if answer == "yes":
+        # fmt: off
         await callback.edit_message_text(
             "A notícia "
             f"<a href='{post['telegraph_url']}'>{post['title']}</a>"
             f" foi arquivada por {user.mention}!",
             disable_web_page_preview=True,
         )
+        # fmt: on
     else:
         chats = [client.news_channel]
 
@@ -43,22 +45,26 @@ async def archive_post(client: Client, callback: CallbackQuery):
 
         for chat_id in chats:
             try:
+                # fmt: off
                 await client.send_message(
                     chat_id,
-                    f"<a href='{post['telegraph_url']}>'"
-                    f"{post['title']} [{post['source']}]</a>",
+                    f"<a href='{post['telegraph_url']}'>"
+                    f"{post['title']} [{post['source']}]</a>"
                 )
+                # fmt: on
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except UserIsBlocked:
                 pass
 
+        # fmt: off
         await callback.edit_message_text(
             "A notícia "
             f"<a href='{post['telegraph_url']}'>{post['title']}</a>"
             f" foi postada por {user.mention}!",
             disable_web_page_preview=True,
         )
+        # fmt: on
 
     await register_post(
         post["source"].lower(),
