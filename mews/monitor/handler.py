@@ -10,7 +10,7 @@ from typing import List
 from bs4 import BeautifulSoup
 from httpx import ConnectTimeout
 from pyrogram import Client
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, UserIsBlocked
 from pyromod.helpers import ikb
 from telegraph.aio import Telegraph
 from telegraph.exceptions import NotAllowedTag, TelegraphException
@@ -199,7 +199,7 @@ async def worker(sources: List[object], client: Client):
                                 )
                             except FloodWait as e:
                                 await asyncio.sleep(e.x)
-                            else:
+                            except UserIsBlocked:
                                 pass
 
                     await register_post(

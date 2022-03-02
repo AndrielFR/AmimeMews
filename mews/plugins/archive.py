@@ -4,7 +4,7 @@
 import asyncio
 
 from pyrogram import Client, filters
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, UserIsBlocked
 from pyrogram.types import CallbackQuery
 
 from mews.utils.database import get_all_words, register_post
@@ -50,7 +50,7 @@ async def archive_post(client: Client, callback: CallbackQuery):
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-            else:
+            except UserIsBlocked:
                 pass
 
         await callback.edit_message_text(
