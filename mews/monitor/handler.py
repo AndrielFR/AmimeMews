@@ -144,7 +144,13 @@ async def worker(sources: List[object], client: Client):
                             index = len(posts)
                             post["telegraph_url"] = url
 
-                            if post in posts:
+                            repeated = False
+                            for p in posts:
+                                if p["post_link"] == post["post_link"] or p["title"] == post["title"]:
+                                    repeated = True
+                                    break
+                            
+                            if repeated:
                                 break
 
                             posts.append(post)
@@ -218,6 +224,6 @@ async def worker(sources: List[object], client: Client):
             if (index + 1) == len(new_posts):
                 clear_new_posts()
 
-            await asyncio.sleep(2.0)
+            await asyncio.sleep(4.0)
 
-        await asyncio.sleep(300)
+        await asyncio.sleep(1800)
