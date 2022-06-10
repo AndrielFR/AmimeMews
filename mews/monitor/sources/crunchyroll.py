@@ -4,12 +4,12 @@
 import asyncio
 import re
 import time
+from typing import Dict, List
 
 import cloudscraper
 from bs4 import BeautifulSoup
 
 from mews.monitor.sources import BaseRSS
-from mews.utils import http
 from mews.utils.database import exists_post
 
 

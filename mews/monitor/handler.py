@@ -4,7 +4,6 @@
 import asyncio
 import logging
 import re
-import time
 from typing import List
 
 from bs4 import BeautifulSoup
@@ -132,7 +131,7 @@ async def worker(sources: List[object], client: Client):
                     url = response["url"]
 
                     similar_posts = []
-                    title_splited = re.findall("\w+", title)
+                    title_splited = re.findall(r"\w+", title)
                     index = 0
                     while index < len(title_splited) - 2:
                         similar_posts = await get_similar_posts(
@@ -146,10 +145,13 @@ async def worker(sources: List[object], client: Client):
 
                             repeated = False
                             for p in posts:
-                                if p["post_link"] == post["post_link"] or p["title"] == post["title"]:
+                                if (
+                                    p["post_link"] == post["post_link"]
+                                    or p["title"] == post["title"]
+                                ):
                                     repeated = True
                                     break
-                            
+
                             if repeated:
                                 break
 

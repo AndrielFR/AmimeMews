@@ -2,8 +2,8 @@
 # Copyright (c) 2022 Andriel Ferreira <https://github.com/AndrielFR>
 
 import asyncio
-import re
 import time
+from typing import Dict, List
 
 from bs4 import BeautifulSoup
 

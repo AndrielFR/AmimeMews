@@ -13,7 +13,7 @@ posts = []
 
 
 @Client.on_callback_query(
-    filters.regex("^archive_post (?P<answer>no|yes) (?P<index>\d+)")
+    filters.regex(r"^archive_post (?P<answer>no|yes) (?P<index>\d+)")
 )
 async def archive_post(client: Client, callback: CallbackQuery):
     user = callback.from_user

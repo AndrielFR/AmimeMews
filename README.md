@@ -15,6 +15,7 @@ Developed in Python using the MTProto library [Pyrogram](https://github.com/pyro
 ## Preparing and running
 
 Rename `config.toml.sample` to `config.toml` and fill with your data like: <br>
+
 ```toml
 [pyrogram]
 api_id = 1234567
@@ -27,11 +28,13 @@ post_revision = -1007654321123
 ```
 
 Install the requirements with: <br>
+
 ```bash
 python -m pip install -Ur requirements.txt
 ```
 
 And finally, starts the bot with: <br>
+
 ```bash
 python -m mews
 ```
