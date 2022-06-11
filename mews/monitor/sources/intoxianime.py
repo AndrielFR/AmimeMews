@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2022 Andriel Ferreira <https://github.com/AndrielFR>
 
+from typing import Dict, List
+
 from mews.monitor.sources import BaseRSS
 
 

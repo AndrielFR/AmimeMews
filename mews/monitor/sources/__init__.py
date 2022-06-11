@@ -2,6 +2,7 @@
 # Copyright (c) 2022 Andriel Ferreira <https://github.com/AndrielFR>
 
 from .baserss import BaseRSS
+
 from .anime21 import Anime21
 from .animenew import AnimeNew
 from .animeunited import AnimeUnited

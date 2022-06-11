@@ -1,4 +1,4 @@
-pyrogram>=1.4.0,<1.5.0
+pyrogram>=2.0.0,<3.0.0
 aiosqlite<=0.18.0
 httpx[http2]>=0.14.0
 feedparser>=6.0.0

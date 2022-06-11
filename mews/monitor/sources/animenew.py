@@ -3,6 +3,7 @@
 
 import asyncio
 import time
+from typing import Dict, List
 
 import feedparser
 from bs4 import BeautifulSoup

@@ -21,13 +21,13 @@ Você sabia que você pode <b>filtrar</b> notícias? O processo para isso é mui
                                     comando, você adiciona <code>Jujutsu Kaisen</code> à
                                     lista de filtros e receberá no privado toda
                                     postagem relacionada.
-                                        
+
 <code>•</code> /del &lt;nome&gt;     <code>—</code> remove uma palavra/nome da lista de filtros.
                                     Exemplo: <code>/del Jujutsu Kaisen</code>, com esse
                                     comando, você remove <code>Jujutsu Kaisen</code> da
                                     lista de filtros e não receberá mais quaisquer
                                     postagem relacionada.
-                                        
+
 <code>•</code> /words               <code>—</code> veja sua lista de filtros.
 
 <b>No momento</b> é apenas isso, mas <s>eu estou ansioso</s> pelas atualizações que <u>receberei</u> <s>em breve</s>. 😵

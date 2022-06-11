@@ -7,6 +7,7 @@ import os
 
 import pytomlpp
 from pyrogram import Client, idle
+from pyrogram.enums import ParseMode
 
 from mews import database
 
@@ -34,7 +35,7 @@ async def main():
         api_id=api_id,
         api_hash=api_hash,
         bot_token=bot_token,
-        parse_mode="html",
+        parse_mode=ParseMode.HTML,
         workers=14,
         workdir=".",
         plugins=dict(root="mews.plugins"),
